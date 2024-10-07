@@ -1,0 +1,56 @@
+# Sistema e IDE
+####################
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Pastas de build
+####################
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+# Arquivos de pacote e dependências
+####################
+*.nupkg
+*.snupkg
+*.nuget/
+.nuget/
+
+# Cache do Visual Studio
+####################
+.vscode/
+.vs/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+[Tt]est[Rr]esult*
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Arquivos de configuração e temporários
+####################
+*.DS_Store
+*.directory
+*.lock.json
+*.log
+*.cache
+*.tmp
+
+# Arquivos de publicações e releases
+####################
+.publish/
+*.publishsettings
+
+# Arquivos de log e temporários
+####################
+*.log
+*.tlog
+*.tmp
+*~backup*
+*~orig*
