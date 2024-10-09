@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public required string Name { get; set; }
-        public bool Status { get; set; }
+        public enum Status { open, close }
         public DateTime Created { get; set; } = DateTime.Now;
     }
 }
