@@ -1,6 +1,6 @@
 ﻿namespace ticketApi.Models
 {
-    public class TiketModel
+    public class TicketModel
     {
         public int Id { get; set; }
         public required string Name { get; set; }

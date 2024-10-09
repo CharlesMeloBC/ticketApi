@@ -18,27 +18,27 @@ namespace ticketApi.Controller
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TiketModel>>> GetAllTickets()
+        public async Task<ActionResult<IEnumerable<TicketModel>>> GetAllTickets()
         {
-            var tickets = await _context.Tikets.ToListAsync();
+            var tickets = await _context.Tickets.ToListAsync();
             return Ok(tickets);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TiketModel>> GetTicketById(int id)
+        public async Task<ActionResult<TicketModel>> GetTicketById(int id)
         {
-            var tickets = await _context.Tikets.FindAsync(id);
+            var tickets = await _context.Tickets.FindAsync(id);
             if (tickets == null) 
                 return NotFound();
             return Ok(tickets);
         }
 
         [HttpPost]
-        public async Task<ActionResult<TiketModel>> CreateTicket([FromBody] TiketModel ticket)
+        public async Task<ActionResult<TicketModel>> CreateTicket([FromBody] TicketModel ticket)
         {
             if (ticket == null || string.IsNullOrEmpty(ticket.Name))
                 return BadRequest("Você precisa preencher os campos");
-            _context.Tikets.Add(ticket);
+            _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(CreateTicket), new {id = ticket.Id }, ticket);

@@ -9,6 +9,6 @@ namespace ticketApi.Data
         {
         }
 
-        public DbSet<TiketModel> Tikets { get; set; }
+        public DbSet<TicketModel> Tickets { get; set; }
     }
 }
