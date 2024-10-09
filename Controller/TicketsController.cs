@@ -6,7 +6,7 @@ using ticketApi.Models;
 
 namespace ticketApi.Controller
 {
-    [Route("api[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TicketsController : ControllerBase
     {
@@ -43,6 +43,20 @@ namespace ticketApi.Controller
 
             return CreatedAtAction(nameof(CreateTicket), new {id = ticket.Id }, ticket);
 
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTicket(int id)
+        {
+            var tickets = await _context.Tickets.FindAsync(id);
+            if(tickets == null)
+            {  
+                return NotFound(); 
+            }
+            _context.Tickets.Remove(tickets);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
