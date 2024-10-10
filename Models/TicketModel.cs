@@ -14,5 +14,7 @@
         public StatusType Status { get; set; } = StatusType.Open;
 
         public DateTime Created { get; set; } = DateTime.Now;
+
+        public DateTime? DeletedAT { get; set; }
     }
 }
