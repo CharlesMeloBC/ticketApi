@@ -5,7 +5,7 @@ git clone https://github.com/ticketApi
 cd ticketApi
 dotnet restore
 
-# TiketApi
+# TicketApi
 
 
 
@@ -28,9 +28,9 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 - Você instalou a versão mais recente de `<linguagem C# / dependência EntityFrameWorkCore / requeridos>`
 - Você tem uma máquina `<Windows / Linux / Mac>`. 
 
-## 🚀 Instalando <TiketApi>
+## 🚀 Instalando <TicketApi>
 
-Para instalar a <TiketApi>, siga estas etapas:
+Para instalar a <TicketApi>, siga estas etapas:
 
 
 Windows:
