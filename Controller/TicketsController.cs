@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ticketApi.Models;
 using ticketApi.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ticketApi.Controllers
 {
@@ -18,11 +16,13 @@ namespace ticketApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TicketModel>>> GetAllTickets()
+        public async Task<ActionResult<List<TicketDto>>> GetAllTickets()
         {
             var tickets = await _ticketService.GetAllTicketsAsync();
+
             return Ok(tickets);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TicketModel>> GetTicketById(int id)
@@ -34,12 +34,13 @@ namespace ticketApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TicketModel>> CreateTicket([FromBody] TicketModel ticket)
+        public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] TicketDto ticketDto)
         {
-            if (ticket == null || string.IsNullOrEmpty(ticket.Name))
+            if (ticketDto == null || string.IsNullOrEmpty(ticketDto.Name))
                 return BadRequest("Você precisa preencher os campos");
 
-            var createdTicket = await _ticketService.CreateTicketAsync(ticket);
+            var createdTicket = await _ticketService.CreateTicketAsync(ticketDto);
+
             return CreatedAtAction(nameof(GetTicketById), new { id = createdTicket.Id }, createdTicket);
         }
 
