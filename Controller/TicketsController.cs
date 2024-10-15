@@ -15,10 +15,10 @@ namespace ticketApi.Controllers
             _ticketService = ticketService;
         }
 
-        [HttpGet]
+        [HttpGet("ativos")]
         public async Task<ActionResult<List<TicketDto>>> GetAllTickets()
         {
-            var tickets = await _ticketService.GetAllTicketsAsync();
+            var tickets = await _ticketService.GetAllTicketsAsyncActive();
 
             return Ok(tickets);
         }
@@ -31,6 +31,13 @@ namespace ticketApi.Controllers
             if (ticket == null)
                 return NotFound();
             return Ok(ticket);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<TicketModel>> GetAllTickets([FromQuery]bool allowAll = false)
+        {
+            var tickets = await _ticketService.GetAllTicketsAsync();
+            return Ok(tickets);
         }
 
         [HttpPost]
