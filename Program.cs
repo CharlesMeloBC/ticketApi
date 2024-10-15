@@ -13,7 +13,7 @@ internal class Program
             options.UseSqlite("Data Source=appBank.db"));
 
         // Serviços para controladores e Swagger
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull; });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<TicketService>();
