@@ -23,7 +23,7 @@ namespace ticketApi.Services
                 Id = s.Id,
                 Name = s.Name,
                 IsActive = s.IsActive,
-                Status = s.Status,
+                Status = s.Status,  
             }).ToList();
 
             return ticketDtos;
@@ -54,7 +54,7 @@ namespace ticketApi.Services
 
         public async Task<TicketDto> CreateTicketAsync(TicketDto ticketDto)
         {
-            var ticket = new TicketModel(ticketDto.Name);
+            var ticket = new TicketModel(ticketDto.Name, ticketDto.IsActive);
 
             _context.Tickets.Add(ticket);
 

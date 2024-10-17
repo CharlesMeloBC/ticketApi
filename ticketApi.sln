@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ticketApi", "ticketApi.csproj", "{0EE51CA6-5BE8-4A2B-B79F-F8DCBCF07226}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ticketApi.Tests", "..\ticketApi.Tests\ticketApi.Tests.csproj", "{533A3E79-AAD6-49BD-B4D2-F44DE591EA8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0EE51CA6-5BE8-4A2B-B79F-F8DCBCF07226}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EE51CA6-5BE8-4A2B-B79F-F8DCBCF07226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EE51CA6-5BE8-4A2B-B79F-F8DCBCF07226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{533A3E79-AAD6-49BD-B4D2-F44DE591EA8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{533A3E79-AAD6-49BD-B4D2-F44DE591EA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{533A3E79-AAD6-49BD-B4D2-F44DE591EA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{533A3E79-AAD6-49BD-B4D2-F44DE591EA8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

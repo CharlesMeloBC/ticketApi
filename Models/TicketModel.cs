@@ -20,7 +20,7 @@
         {
         }
 
-        public TicketModel(string name)
+        public TicketModel(string name, bool IsActive)
         {
             Name = name;
             Status = StatusType.Open;
