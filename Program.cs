@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ticketApi.Data;
+using ticketApi.Services;
 
 internal class Program
 {
@@ -15,6 +16,8 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<TicketService>();
+
 
         var app = builder.Build();
 

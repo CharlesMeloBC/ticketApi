@@ -1,48 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ticketApi.Data;
 using ticketApi.Models;
+using ticketApi.Services;
 
-
-namespace ticketApi.Controller
+namespace ticketApi.Controllers
 {
-    [Route("api[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly TicketService _ticketService;
 
-        public TicketsController (AppDbContext context)
+        public TicketsController(TicketService ticketService)
         {
-            _context = context;
+            _ticketService = ticketService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TicketModel>>> GetAllTickets()
+        public async Task<ActionResult<List<TicketDto>>> GetAllTickets()
         {
-            var tickets = await _context.Tickets.ToListAsync();
+            var tickets = await _ticketService.GetAllTicketsAsync();
+
             return Ok(tickets);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TicketModel>> GetTicketById(int id)
         {
-            var tickets = await _context.Tickets.FindAsync(id);
-            if (tickets == null) 
+            var ticket = await _ticketService.GetTicketByIdAsync(id);
+            if (ticket == null)
                 return NotFound();
-            return Ok(tickets);
+            return Ok(ticket);
         }
 
         [HttpPost]
-        public async Task<ActionResult<TicketModel>> CreateTicket([FromBody] TicketModel ticket)
+        public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] TicketDto ticketDto)
         {
-            if (ticket == null || string.IsNullOrEmpty(ticket.Name))
+            if (ticketDto == null || string.IsNullOrEmpty(ticketDto.Name))
                 return BadRequest("Você precisa preencher os campos");
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(CreateTicket), new {id = ticket.Id }, ticket);
+            var createdTicket = await _ticketService.CreateTicketAsync(ticketDto);
 
+            return CreatedAtAction(nameof(GetTicketById), new { id = createdTicket.Id }, createdTicket);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTicket(int id)
+        {
+            var success = await _ticketService.DeleteTicketAsync(id);
+            if (!success)
+                return NotFound();
+            return NoContent();
         }
     }
 }
