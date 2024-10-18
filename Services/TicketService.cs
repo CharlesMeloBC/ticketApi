@@ -29,18 +29,18 @@ namespace ticketApi.Services
             return ticketDtos;
         }
 
-        public async Task<List<TicketDtoAllInfo>> GetAllTicketsAsync()
+        public async Task<List<TicketDto>> GetAllTicketsAsync(bool includeDeleted = false)
         {
             var allTickets = await _context.Tickets.ToListAsync();
 
-            var ticketsDtos = allTickets.Select(t => new TicketDtoAllInfo
+            var ticketsDtos = allTickets.Select(t => new TicketDto
             {
                 Id = t.Id,
                 Name = t.Name,
                 IsActive = t.IsActive,
                 Status = t.Status,
                 Created = t.Created,
-                DeletedAT = t.DeletedAT
+                DeletedAT = includeDeleted ? t.DeletedAT : null,
 
             }).ToList();
 

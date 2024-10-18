@@ -36,7 +36,7 @@ namespace ticketApi.Controllers
         [HttpGet]
         public async Task<ActionResult<TicketModel>> GetAllTickets([FromQuery]bool allowAll = false)
         {
-            var tickets = await _ticketService.GetAllTicketsAsync();
+            var tickets = await _ticketService.GetAllTicketsAsync(true);
             return Ok(tickets);
         }
 
