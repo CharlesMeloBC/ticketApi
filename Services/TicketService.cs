@@ -13,9 +13,10 @@ namespace ticketApi.Services
             _context = context;
         }
 
-        public async Task<List<TicketDto>> GetAllTicketsAsync()
+        public async Task<List<TicketDto>> GetAllTicketsAsyncActive()
         {
-            var activeTickets = await _context.Tickets.Where(s => s.IsActive).ToListAsync();
+            var activeTickets = await _context.Tickets.Where(s => s.IsActive)
+            .ToListAsync();
 
             var ticketDtos = activeTickets.Select(s => new TicketDto
             {
@@ -23,10 +24,27 @@ namespace ticketApi.Services
                 Name = s.Name,
                 IsActive = s.IsActive,
                 Status = s.Status,
-                Created = s.Created
             }).ToList();
 
             return ticketDtos;
+        }
+
+        public async Task<List<TicketDtoAllInfo>> GetAllTicketsAsync()
+        {
+            var allTickets = await _context.Tickets.ToListAsync();
+
+            var ticketsDtos = allTickets.Select(t => new TicketDtoAllInfo
+            {
+                Id = t.Id,
+                Name = t.Name,
+                IsActive = t.IsActive,
+                Status = t.Status,
+                Created = t.Created,
+                DeletedAT = t.DeletedAT
+
+            }).ToList();
+
+            return ticketsDtos; 
         }
 
         public async Task<TicketModel?> GetTicketByIdAsync(int id)
