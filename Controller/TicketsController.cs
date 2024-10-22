@@ -8,9 +8,9 @@ namespace ticketApi.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly TicketService _ticketService;
+        private readonly ITicketService _ticketService;
 
-        public TicketsController(TicketService ticketService)
+        public TicketsController(ITicketService ticketService)
         {
             _ticketService = ticketService;
         }
@@ -23,18 +23,18 @@ namespace ticketApi.Controllers
             return Ok(tickets);
         }
 
-
         [HttpGet("{id}")]
-        public async Task<ActionResult<TicketModel>> GetTicketById(int id)
+        public async Task<ActionResult<TicketDto>> GetTicketById(int id)
         {
-            var ticket = await _ticketService.GetTicketByIdAsync(id);
-            if (ticket == null)
-                return NotFound();
-            return Ok(ticket);
+            var ticketDto = await _ticketService.GetTicketByIdAsync(id);
+            if (ticketDto == null)
+            return NotFound();
+            return Ok(ticketDto);
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<TicketModel>> GetAllTickets([FromQuery]bool allowAll = false)
+        public async Task<ActionResult<TicketDto>> GetAllTickets([FromQuery]bool allowAll = false)
         {
             var tickets = await _ticketService.GetAllTicketsAsync(true);
             return Ok(tickets);

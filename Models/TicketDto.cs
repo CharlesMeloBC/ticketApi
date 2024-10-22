@@ -2,6 +2,8 @@
 {
     public class TicketDto
     {
+        public bool isActive;
+
         public int? Id { get; set; }
 
         public string Name { get; set; } = null!;

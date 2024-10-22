@@ -16,7 +16,7 @@ internal class Program
         builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull; });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddScoped<TicketService>();
+        builder.Services.AddScoped<ITicketService, TicketService>();
 
 
         var app = builder.Build();

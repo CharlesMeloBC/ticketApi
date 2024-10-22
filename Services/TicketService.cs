@@ -4,7 +4,7 @@ using ticketApi.Models;
 
 namespace ticketApi.Services
 {
-    public class TicketService
+    public class TicketService : ITicketService
     {
         private readonly AppDbContext _context;
 
@@ -15,15 +15,16 @@ namespace ticketApi.Services
 
         public async Task<List<TicketDto>> GetAllTicketsAsyncActive()
         {
-            var activeTickets = await _context.Tickets.Where(s => s.IsActive)
-            .ToListAsync();
+            var activeTickets = await _context.Tickets
+                .Where(s => s.IsActive)
+                .ToListAsync();
 
             var ticketDtos = activeTickets.Select(s => new TicketDto
             {
                 Id = s.Id,
                 Name = s.Name,
                 IsActive = s.IsActive,
-                Status = s.Status,  
+                Status = s.Status,
             }).ToList();
 
             return ticketDtos;
@@ -31,7 +32,9 @@ namespace ticketApi.Services
 
         public async Task<List<TicketDto>> GetAllTicketsAsync(bool includeDeleted = false)
         {
-            var allTickets = await _context.Tickets.ToListAsync();
+            var allTickets = await _context.Tickets
+                .Where(t => includeDeleted || t.DeletedAT == null)
+                .ToListAsync();
 
             var ticketsDtos = allTickets.Select(t => new TicketDto
             {
@@ -41,23 +44,32 @@ namespace ticketApi.Services
                 Status = t.Status,
                 Created = t.Created,
                 DeletedAT = includeDeleted ? t.DeletedAT : null,
-
             }).ToList();
 
-            return ticketsDtos; 
+            return ticketsDtos;
         }
-
-        public async Task<TicketModel?> GetTicketByIdAsync(int id)
+        public async Task<TicketDto?> GetTicketByIdAsync(int id)
         {
-            return await _context.Tickets.FindAsync(id);
-        }
+            var ticketModel = await _context.Tickets.FindAsync(id);
+            if (ticketModel == null)
+            {
+                return null; 
+            }
 
+            var ticketDto = new TicketDto
+            {
+                Id = ticketModel.Id,
+                Name = ticketModel.Name,
+                isActive = ticketModel.IsActive
+            };
+
+            return ticketDto; 
+        }
         public async Task<TicketDto> CreateTicketAsync(TicketDto ticketDto)
         {
             var ticket = new TicketModel(ticketDto.Name, ticketDto.IsActive);
 
             _context.Tickets.Add(ticket);
-
             await _context.SaveChangesAsync();
 
             ticketDto.Id = ticket.Id;
@@ -75,11 +87,12 @@ namespace ticketApi.Services
             if (ticket == null)
                 return false;
 
-            ticket.Disable();
-
+            ticket.Disable(); 
             await _context.SaveChangesAsync();
 
             return true;
         }
+
+
     }
 }
