@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ticketApi.Models;
 using ticketApi.Services;
 
@@ -15,6 +16,7 @@ namespace ticketApi.Controllers
             _ticketService = ticketService;
         }
 
+        [Authorize(Policy = "MicaDeveloperPolicy")]
         [HttpGet("ativos")]
         public async Task<ActionResult<List<TicketDto>>> GetAllTickets()
         {
@@ -23,6 +25,7 @@ namespace ticketApi.Controllers
             return Ok(tickets);
         }
 
+        [Authorize(Policy = "MicaDeveloperPolicy")]
         [HttpGet("{id}")]
         public async Task<ActionResult<TicketDto>> GetTicketById(int id)
         {
@@ -32,7 +35,7 @@ namespace ticketApi.Controllers
             return Ok(ticketDto);
         }
 
-
+        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         public async Task<ActionResult<TicketDto>> GetAllTickets([FromQuery]bool allowAll = false)
         {
@@ -40,6 +43,7 @@ namespace ticketApi.Controllers
             return Ok(tickets);
         }
 
+        [Authorize(Policy = "MicaDeveloperPolicy")]
         [HttpPost]
         public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] TicketDto ticketDto)
         {
@@ -51,6 +55,7 @@ namespace ticketApi.Controllers
             return CreatedAtAction(nameof(GetTicketById), new { id = createdTicket.Id }, createdTicket);
         }
 
+        [Authorize(Policy = "MicaDeveloperPolicy")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
         {
