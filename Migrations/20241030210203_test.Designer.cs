@@ -11,8 +11,8 @@ using ticketApi.Data;
 namespace ticketApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241010034028_CreateDeletAtInModel")]
-    partial class CreateDeletAtInModel
+    [Migration("20241030210203_test")]
+    partial class test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,8 +32,18 @@ namespace ticketApi.Migrations
                     b.Property<DateTime?>("DeletedAT")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
