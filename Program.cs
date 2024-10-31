@@ -3,72 +3,98 @@ using ticketApi.Data;
 using ticketApi.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Serilog;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        
+        var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+        .Build();
 
-        builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite("Data Source=appBank.db"));
+        var logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(configuration)
+        .CreateLogger();
 
-        builder.Services.AddControllers().AddJsonOptions(options =>
+        logger.Information("Args: {Args}", args);
+
+        try
         {
-            options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-        });
+            Log.Information("Iniciando a aplicação...");
 
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ticket API", Version = "v1" });
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Host.UseSerilog(); // Injeta o Serilog no host da aplicação
 
-            c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite("Data Source=appBank.db"));
+
+            builder.Services.AddControllers().AddJsonOptions(options =>
             {
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT", // Opcional
-                Description = "Insira o token JWT no formato **Bearer {seu_token}**"
+                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
             });
 
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
             {
-                { new OpenApiSecurityScheme
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ticket API", Version = "v1" });
+                c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Insira o token JWT no formato **Bearer {seu_token}**"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "bearerAuth"
-                        }
-                    },
-                    new string[] { }
-                }
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearerAuth"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
-        });
 
-        builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = BearerTokenDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = BearerTokenDefaults.AuthenticationScheme;
-        })
-        .AddBearerToken(); 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = BearerTokenDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = BearerTokenDefaults.AuthenticationScheme;
+            })
+            .AddBearerToken();
 
-        builder.Services.AddAuthorization();
-        builder.Services.AddScoped<TicketService>();
+            builder.Services.AddAuthorization();
+            builder.Services.AddScoped<TicketService>();
 
-        var app = builder.Build();
+            var app = builder.Build();
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
         }
-
-        app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.MapControllers();
-
-        app.Run();
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "A aplicação falhou ao iniciar");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 }
