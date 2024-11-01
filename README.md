@@ -18,8 +18,8 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [x] Tarefa 1 - implementar metodos de busca
 - [x] Tarefa 2 - implementar metodos de consulta do DB
 - [x] Tarefa 3 - implementar metodo de deletar  
-- [ ] Tarefa 4 
-- [ ] Tarefa 5
+- [x] Tarefa 4 - implementar token e users de acesso
+- [x] Tarefa 5 - implementar logs
 
 ## 💻 Pré-requisitos
 
