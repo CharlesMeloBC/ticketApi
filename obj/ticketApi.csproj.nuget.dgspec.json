@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Charles\\Desktop\\ticketApi\\ticketApi.csproj": {}
+    "C:\\Users\\Charles\\Desktop\\Nova pasta\\ticketApi\\ticketApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Charles\\Desktop\\ticketApi\\ticketApi.csproj": {
+    "C:\\Users\\Charles\\Desktop\\Nova pasta\\ticketApi\\ticketApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Charles\\Desktop\\ticketApi\\ticketApi.csproj",
+        "projectUniqueName": "C:\\Users\\Charles\\Desktop\\Nova pasta\\ticketApi\\ticketApi.csproj",
         "projectName": "ticketApi",
-        "projectPath": "C:\\Users\\Charles\\Desktop\\ticketApi\\ticketApi.csproj",
+        "projectPath": "C:\\Users\\Charles\\Desktop\\Nova pasta\\ticketApi\\ticketApi.csproj",
         "packagesPath": "C:\\Users\\Charles\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Charles\\Desktop\\ticketApi\\obj\\",
+        "outputPath": "C:\\Users\\Charles\\Desktop\\Nova pasta\\ticketApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Charles\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,18 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "JWT": {
+              "target": "Package",
+              "version": "[10.1.1, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Core": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.8, )"
@@ -67,6 +79,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.1.2, )"
             }
           },
           "imports": [

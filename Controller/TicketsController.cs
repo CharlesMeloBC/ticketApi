@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ticketApi.Models;
 using ticketApi.Services;
 
 namespace ticketApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class TicketsController : ControllerBase
     {
         private readonly TicketService _ticketService;
@@ -16,16 +18,16 @@ namespace ticketApi.Controllers
         }
 
         [HttpGet("ativos")]
-        public async Task<ActionResult<List<TicketDto>>> GetAllTickets()
+        [Authorize(Roles = "admin, mica-developer")]
+        public async Task<ActionResult<List<TicketDto>>> GetAllActiveTickets()
         {
             var tickets = await _ticketService.GetAllTicketsAsyncActive();
-
             return Ok(tickets);
         }
 
-
         [HttpGet("{id}")]
-        public async Task<ActionResult<TicketModel>> GetTicketById(int id)
+        [Authorize(Roles = "admin, mica-developer")]
+        public async Task<ActionResult<TicketDto>> GetTicketById(int id)
         {
             var ticket = await _ticketService.GetTicketByIdAsync(id);
             if (ticket == null)
@@ -33,25 +35,27 @@ namespace ticketApi.Controllers
             return Ok(ticket);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<TicketModel>> GetAllTickets([FromQuery]bool allowAll = false)
+        [HttpGet("get-all")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<TicketDto>>> GetAllTicketsIncludingDeleted([FromQuery] bool allowAll = false)
         {
-            var tickets = await _ticketService.GetAllTicketsAsync(true);
+            var tickets = await _ticketService.GetAllTicketsAsync(allowAll);
             return Ok(tickets);
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, mica-developer")]
         public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] TicketDto ticketDto)
         {
             if (ticketDto == null || string.IsNullOrEmpty(ticketDto.Name))
                 return BadRequest("Você precisa preencher os campos");
 
             var createdTicket = await _ticketService.CreateTicketAsync(ticketDto);
-
             return CreatedAtAction(nameof(GetTicketById), new { id = createdTicket.Id }, createdTicket);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteTicket(int id)
         {
             var success = await _ticketService.DeleteTicketAsync(id);

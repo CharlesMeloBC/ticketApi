@@ -4,7 +4,7 @@ using ticketApi.Models;
 
 namespace ticketApi.Services
 {
-    public class TicketService
+    public class TicketService : ITicketService
     {
         private readonly AppDbContext _context;
 
@@ -47,14 +47,28 @@ namespace ticketApi.Services
             return ticketsDtos; 
         }
 
-        public async Task<TicketModel?> GetTicketByIdAsync(int id)
+        public async Task<TicketDto?> GetTicketByIdAsync(int id)
         {
-            return await _context.Tickets.FindAsync(id);
+            var ticketModel = await _context.Tickets.FindAsync(id);
+
+            if (ticketModel == null)
+            {
+                return null;
+            }
+
+            var ticketDto = new TicketDto
+            {
+                Id = ticketModel.Id,
+                Name = ticketModel.Name,
+                Description = ticketModel.Description,
+            };
+
+            return ticketDto;
         }
 
         public async Task<TicketDto> CreateTicketAsync(TicketDto ticketDto)
         {
-            var ticket = new TicketModel(ticketDto.Name);
+            var ticket = new TicketModel(ticketDto.Name, ticketDto.Description);
 
             _context.Tickets.Add(ticket);
 
@@ -64,6 +78,7 @@ namespace ticketApi.Services
             ticketDto.Status = ticket.Status;
             ticketDto.IsActive = ticket.IsActive;
             ticketDto.Created = ticket.Created;
+            ticketDto.Description = ticket.Description;
 
             return ticketDto;
         }

@@ -5,7 +5,7 @@
 namespace ticketApi.Migrations
 {
     /// <inheritdoc />
-    public partial class TicketsEndPoints : Migration
+    public partial class test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
