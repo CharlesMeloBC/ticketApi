@@ -12,19 +12,24 @@
 
         public bool IsActive { get; private set; }
 
+        public string? Role {  get; private set; }
+
         public DateTime? DeletedAT { get; private set; }
 
         public DateTime? DisplayDeletedAt => DeletedAT;
+
+        public  string Description { get; internal set; } = string.Empty;
 
         private TicketModel()
         {
         }
 
-        public TicketModel(string name)
+        public TicketModel(string name, string description)
         {
             Name = name;
             Status = StatusType.Open;
             Created = DateTime.Now;
+            Description = description;
             IsActive = true;
         }
 

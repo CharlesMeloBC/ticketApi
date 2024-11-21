@@ -11,8 +11,8 @@ using ticketApi.Data;
 namespace ticketApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241007214516_initialCreate")]
-    partial class initialCreate
+    [Migration("20241029032323_update")]
+    partial class Uptodate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace ticketApi.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("ticketApi.Models.TiketModel", b =>
+            modelBuilder.Entity("ticketApi.Models.TicketModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,16 +29,28 @@ namespace ticketApi.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DeletedAT")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Status")
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tikets");
+                    b.ToTable("Tickets");
                 });
 #pragma warning restore 612, 618
         }

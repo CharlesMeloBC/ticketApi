@@ -1,35 +1,100 @@
 using Microsoft.EntityFrameworkCore;
 using ticketApi.Data;
 using ticketApi.Services;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Serilog;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        
+        var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+        .Build();
 
-        // Registra o AppDbContext com SQLite
-        builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite("Data Source=appBank.db"));
+        var logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(configuration)
+        .CreateLogger();
 
-        // Serviços para controladores e Swagger
-        builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull; });
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddScoped<TicketService>();
+        logger.Information("Args: {Args}", args);
 
-
-        var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
+        try
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            Log.Information("Iniciando a aplicação...");
+
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Host.UseSerilog(); // Injeta o Serilog no host da aplicação
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite("Data Source=appBank.db"));
+
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            });
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ticket API", Version = "v1" });
+                c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Insira o token JWT no formato **Bearer {seu_token}**"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearerAuth"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = BearerTokenDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = BearerTokenDefaults.AuthenticationScheme;
+            })
+            .AddBearerToken();
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddScoped<TicketService>();
+
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
         }
-
-        app.UseRouting();
-        app.MapControllers();
-
-        app.Run();
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "A aplicação falhou ao iniciar");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 }

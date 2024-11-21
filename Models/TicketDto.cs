@@ -13,7 +13,7 @@
         public bool? IsActive { get; set; }
 
         public DateTime? DeletedAT { get; set; }
-
+        public string Description { get; internal set; } = string.Empty;
     }
 
 }
