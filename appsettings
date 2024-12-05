@@ -1,0 +1,61 @@
+# Documentação do appsettings.json
+
+Este documento descreve as configurações presentes no arquivo `appsettings.json`, que são utilizadas para configurar o comportamento da aplicação.
+
+---
+
+## **AllowedHosts**
+- **Descrição:** Define os hosts permitidos para a aplicação. 
+- **Valor padrão:** `*` (qualquer host é permitido).
+
+---
+
+## **Serilog**
+Configuração do **Serilog**, o sistema de logging utilizado na aplicação.
+
+### **Using**
+- **Descrição:** Lista de pacotes e sinks utilizados pelo Serilog.
+- **Exemplo de valores:**
+  - `Serilog.Sinks.Console` - Para enviar logs para o console.
+  - `Serilog.Formatting.Elasticsearch` - Para formatar logs no estilo Elasticsearch.
+  - `CSF.Serilog.Enrichers.ClientInfo` - Para adicionar informações sobre o cliente.
+  - `CSF.Serilog.Enrichers.CorrelationId` - Para enriquecer logs com IDs de correlação.
+
+### **MinimumLevel**
+- **Descrição:** Define o nível mínimo de logs a serem registrados.
+- **Valor padrão:** `Information`.
+- **Níveis suportados:** `Verbose`, `Debug`, `Information`, `Warning`, `Error`, `Fatal`.
+
+### **WriteTo**
+- **Descrição:** Configura onde os logs serão escritos.
+- **Exemplo de configuração:**
+  - **Name:** `"Console"` - Escreve logs no console.
+  - **Args:** 
+    - **formatter:** `"Serilog.Formatting.Elasticsearch.ElasticsearchJsonFormatter, Serilog.Form"`
+
+### **Enrich**
+- **Descrição:** Lista de propriedades adicionais que serão enriquecidas nos logs.
+- **Valores configurados:**
+  - `WithProperty` - Adiciona uma propriedade customizada.
+    - **Args:**
+      - **name:** `"ApplicationName"` - Nome da aplicação.
+      - **value:** `"newprojcwithnewtemplate.Api"` - Valor do nome da aplicação.
+  - `WithMachineName` - Adiciona o nome da máquina.
+  - `WithDemystifiedStackTraces` - Melhora a legibilidade de traces de exceções.
+  - `WithClientAgent` - Adiciona informações sobre o agente cliente.
+  - `FromLogContext` - Permite o uso de contexto de log.
+  - `WithCorrelationIdHeader` - Adiciona IDs de correlação.
+
+---
+
+## **MensagensDeErro**
+- **Descrição:** Contém mensagens customizadas para determinados erros.
+
+### **DivisorZero**
+- **Descrição:** Mensagem exibida quando há tentativa de divisão por zero.
+- **Valor:** `"Divisor não pode ser 0"`.
+
+---
+
+## Referência
+Para mais informações sobre a configuração de **Serilog**, consulte a [documentação oficial](https://serilog.net/).
